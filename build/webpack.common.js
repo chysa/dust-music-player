@@ -7,7 +7,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 module.exports = {
 	entry: {
 		app: [path.resolve(__dirname, '../app/index.js')],
-        vendor: ['vue', 'babel-polyfill', 'axios', 'vuex', 'vue-router']
+		vendor: ['vue', 'babel-polyfill', 'axios', 'vuex', 'vue-router']
 	},
 	output: {
 		filename: '[name].[hash].js',
@@ -17,15 +17,18 @@ module.exports = {
 		libraryTarget: 'window'
 	},
 	plugins: [
-		new CleanWebpackPlugin(['../dust']),
+		new CleanWebpackPlugin(['dust'], {
+            root: path.resolve(__dirname, '../'),
+            verbose:true,
+            dry:false
+		}),
 		new webpack.NamedModulesPlugin(),
-        new VueLoaderPlugin(),
+		new VueLoaderPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
 		new HTMLWebpackPlugin({
 			title: 'dust sun',
 			template: path.join(__dirname, '../index.ejs')
 		})
-
 	],
 	module: {
 		rules: [
@@ -69,19 +72,18 @@ module.exports = {
 				test: /\.worker\.js$/,
 				use: 'worker-loader'
 			},
-            {
-                test: /\.vue$/,
-                include: [path.resolve(__dirname, '../app')],
-                exclude: [path.resolve(__dirname, '../node_modules')],
-                loader: 'vue-loader'
-            },
+			{
+				test: /\.vue$/,
+				include: [path.resolve(__dirname, '../app')],
+				exclude: [path.resolve(__dirname, '../node_modules')],
+				loader: 'vue-loader'
+			},
 			//转化ES6代码
 			{
 				test: /\.(js)$/,
 				use: [
 					{
 						loader: 'babel-loader'
-
 					}
 				],
 				exclude: [path.resolve(__dirname, '../node_modules')]
